@@ -5,7 +5,6 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-
 class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
@@ -37,18 +36,21 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
         return db.rawQuery("SELECT * FROM $TABLE_NAME", null)
     }
 
-    fun deleteAllNames() {
+
+    fun deleteNameById(id: Int) {
         val db = this.writableDatabase
-        db.delete(TABLE_NAME, null, null)
+        db.delete(TABLE_NAME, "$ID_COL = ? ", arrayOf(id.toString()))
         db.close()
     }
 
+
+
     companion object {
-         val DATABASE_NAME = "nombres"
-         val DATABASE_VERSION = 1
-         val TABLE_NAME = "name_table"
-         val ID_COL = "id"
-         val NAME_COl = "nombre"
-         val AGE_COL = "edad"
+        val DATABASE_NAME = "nombres"
+        val DATABASE_VERSION = 1
+        val TABLE_NAME = "name_table"
+        val ID_COL = "id"
+        val NAME_COl = "nombre"
+        val AGE_COL = "edad"
     }
 }

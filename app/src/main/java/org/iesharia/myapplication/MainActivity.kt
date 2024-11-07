@@ -53,7 +53,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun MainActivityContent(modifier: Modifier) {
     val context = LocalContext.current
@@ -97,6 +96,18 @@ fun MainActivityContent(modifier: Modifier) {
             modifier = Modifier,
             textStyle = TextStyle(color = Color.DarkGray),
             label = { Text(text = "Edad") },
+            singleLine = true,
+            shape = RoundedCornerShape(10.dp)
+        )
+
+        // ID de eliminación
+        var idToDelete by remember { mutableStateOf("") }
+        OutlinedTextField(
+            value = idToDelete,
+            onValueChange = { idToDelete = it },
+            modifier = Modifier,
+            textStyle = TextStyle(color = Color.DarkGray),
+            label = { Text(text = "ID para eliminar") },
             singleLine = true,
             shape = RoundedCornerShape(10.dp)
         )
@@ -150,18 +161,33 @@ fun MainActivityContent(modifier: Modifier) {
                 Text(text = "Mostrar")
             }
 
+            // Botón Eliminar
             Button(
                 modifier = buttonModifier,
                 onClick = {
-                    db.deleteAllNames()
-                    Toast.makeText(context, "Todos los registros eliminados", Toast.LENGTH_SHORT).show()
+                    val id = idToDelete.toIntOrNull()
+                    if (id != null) {
+                        db.deleteNameById(id)
+                        Toast.makeText(
+                            context,
+                            "Registro con ID $id eliminado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Por favor ingrese una ID válida",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    idToDelete = ""
                 }
             ) {
                 Text(text = "Eliminar",
-                    fontSize = 9.sp
+                    fontSize = 9.sp,
 
-                )
-
+                    )
             }
         }
 
