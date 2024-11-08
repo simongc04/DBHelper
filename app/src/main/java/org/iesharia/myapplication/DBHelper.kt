@@ -37,7 +37,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
     }
 
 
-    fun deleteNameById(id: Int) {
+    fun EliminarID(id: Int) {
         val db = this.writableDatabase
         db.delete(TABLE_NAME, "$ID_COL = ? ", arrayOf(id.toString()))
         db.close()
