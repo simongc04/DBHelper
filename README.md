@@ -10,5 +10,4 @@ El boton de mostrar funciona como el de actualizar.
 
 ## APP:
 
-![Captura de pantalla_2024-11-06_09-33-42](https://github.com/user-attachments/assets/1f43e719-c054-4f3b-b0df-18ba9be43cdc)
-![Captura de pantalla_2024-11-06_09-35-05](https://github.com/user-attachments/assets/0ee03263-e068-4d47-9fe5-6af90a5daf0f)
+![Captura de pantalla 2024-11-10 185851](https://github.com/user-attachments/assets/1caaeb80-121e-418c-8e64-578e265912a6)
