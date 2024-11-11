@@ -1,5 +1,6 @@
 package org.iesharia.myapplication
 
+
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
+
 
     override fun onCreate(db: SQLiteDatabase) {
         val query = ("CREATE TABLE " + TABLE_NAME + " ("
@@ -16,20 +18,24 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
         db.execSQL(query)
     }
 
+
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
+
 
     fun addName(name: String, age: String) {
         val values = ContentValues()
         values.put(NAME_COl, name)
         values.put(AGE_COL, age)
 
+
         val db = this.writableDatabase
         db.insert(TABLE_NAME, null, values)
         db.close()
     }
+
 
     fun getName(): Cursor? {
         val db = this.readableDatabase
@@ -37,11 +43,26 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
     }
 
 
+
+
     fun EliminarID(id: Int) {
         val db = this.writableDatabase
         db.delete(TABLE_NAME, "$ID_COL = ? ", arrayOf(id.toString()))
         db.close()
     }
+    fun updateRecord(id: Int, name: String, age: String) {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(NAME_COl, name)
+        values.put(AGE_COL, age)
+
+
+        db.update(TABLE_NAME, values, "$ID_COL = ?", arrayOf(id.toString()))
+        db.close()
+    }
+
+
+
 
 
 
@@ -54,3 +75,4 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory? = null) 
         val AGE_COL = "edad"
     }
 }
+
