@@ -67,15 +67,13 @@ fun MainActivityContent(modifier: Modifier) {
     val context = LocalContext.current
     val db = DBHelper(context)
 
-
     var lName: String by remember { mutableStateOf("ID / Nombre") }
     var lAge: String by remember { mutableStateOf("Edad") }
 
-
     var nameValue by remember { mutableStateOf("") }
     var ageValue by remember { mutableStateOf("") }
-    var idToDelete by remember { mutableStateOf("") }
-    var idToUpdate by remember { mutableStateOf("") }
+    var idToEdit by remember { mutableStateOf("") }  // Campo único para eliminar y actualizar
+
     Column(
         verticalArrangement = Arrangement.Center,
         modifier = modifier,
@@ -91,7 +89,6 @@ fun MainActivityContent(modifier: Modifier) {
             fontSize = 10.sp
         )
 
-
         OutlinedTextField(
             value = nameValue,
             onValueChange = { nameValue = it },
@@ -101,7 +98,6 @@ fun MainActivityContent(modifier: Modifier) {
             singleLine = true,
             shape = RoundedCornerShape(10.dp)
         )
-
 
         OutlinedTextField(
             value = ageValue,
@@ -113,9 +109,7 @@ fun MainActivityContent(modifier: Modifier) {
             shape = RoundedCornerShape(10.dp)
         )
 
-
         val buttonModifier: Modifier = Modifier.padding(10.dp)
-
 
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -139,7 +133,6 @@ fun MainActivityContent(modifier: Modifier) {
                 Text(text = "Añadir")
             }
 
-
             Button(
                 modifier = buttonModifier,
                 onClick = {
@@ -162,86 +155,75 @@ fun MainActivityContent(modifier: Modifier) {
             }
         }
 
-
         Spacer(modifier = Modifier.padding(8.dp))
 
-
         OutlinedTextField(
-            value = idToDelete,
-            onValueChange = { idToDelete = it },
+            value = idToEdit,
+            onValueChange = { idToEdit = it },
             modifier = Modifier,
-            textStyle = TextStyle(color = Color.DarkGray),
-            label = { Text(text = "ID para eliminar") },
+            label = { Text(text = "ID para eliminar o actualizar") },
             singleLine = true,
             shape = RoundedCornerShape(10.dp)
         )
-        Button(
-            modifier = buttonModifier,
-            onClick = {
-                val id = idToDelete.toIntOrNull()
-                if (id != null) {
-                    db.EliminarID(id)
-                    Toast.makeText(
-                        context,
-                        "Registro con ID $id eliminado",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Por favor ingrese una ID válida",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                idToDelete = ""
-            }
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Eliminar")
+            Button(
+                modifier = buttonModifier,
+                onClick = {
+                    val id = idToEdit.toIntOrNull()
+                    if (id != null) {
+                        db.EliminarID(id)
+                        Toast.makeText(
+                            context,
+                            "Registro con ID $id eliminado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Por favor ingrese una ID válida",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    idToEdit = ""
+                }
+            ) {
+                Text(text = "Eliminar")
+            }
+
+            // Botón para actualizar
+            Button(
+                modifier = buttonModifier,
+                onClick = {
+                    val id = idToEdit.toIntOrNull()
+                    val name = nameValue
+                    val age = ageValue
+                    if (id != null && name.isNotEmpty() && age.isNotEmpty()) {
+                        db.updateRecord(id, name, age)
+                        Toast.makeText(
+                            context,
+                            "Registro con ID $id actualizado",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Por favor complete todos los campos correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    idToEdit = ""
+                    nameValue = ""
+                    ageValue = ""
+                }
+            ) {
+                Text(text = "Actualizar")
+            }
         }
 
-
-        Spacer(modifier = Modifier.padding(8.dp))
-
-
-        OutlinedTextField(
-            value = idToUpdate,
-            onValueChange = { idToUpdate = it },
-            modifier = Modifier,
-            textStyle = TextStyle(color = Color.DarkGray),
-            label = { Text(text = "ID para actualizar") },
-            singleLine = true,
-            shape = RoundedCornerShape(10.dp)
-        )
-        Button(
-            modifier = buttonModifier,
-            onClick = {
-                val id = idToUpdate.toIntOrNull()
-                val name = nameValue
-                val age = ageValue
-                if (id != null && name.isNotEmpty() && age.isNotEmpty()) {
-                    db.updateRecord(id, name, age)
-                    Toast.makeText(
-                        context,
-                        "Registro con ID $id actualizado",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Por favor complete todos los campos correctamente",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                idToUpdate = ""
-                nameValue = ""
-                ageValue = ""
-            }
-        ) {
-            Text(text = "Actualizar")
-        }
-
-
-        // Sección para mostrar resultados
         Row {
             Text(
                 modifier = buttonModifier,
@@ -254,5 +236,4 @@ fun MainActivityContent(modifier: Modifier) {
         }
     }
 }
-
 
